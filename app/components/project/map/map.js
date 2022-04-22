@@ -1,14 +1,13 @@
 //переменные для врапперов карты
-const template = document.querySelector('#svg-template');
+const svg = document.querySelector('#svg-template');
 const templateDiv = document.querySelector('.map__template');
 const completeDiv = document.querySelector('.map__complete');
-const tCoord = template.getBoundingClientRect();
+const svgCoord = svg.getBoundingClientRect();
 
-templateDiv.style.opacity = '1';
 //контейнерам размеры svg карты
 [templateDiv,completeDiv].forEach((el)=> {
-    el.style.width = `${template.clientWidth}px`;
-    el.style.height = `${template.clientHeight}px`;
+    el.style.width = `${svg.clientWidth}px`;
+    el.style.height = `${svg.clientHeight}px`;
 });
 
 //переменные для кусков
@@ -16,14 +15,14 @@ const partsDiv = document.querySelectorAll('.map__part');
 const parts = document.querySelectorAll('img');
 //контейнеры кусков равны размеру внутри
 Array.from(parts).forEach((el,id)=> {
-    let w = el.offsetWidth;
-    let h = el.offsetHeight;
-    let x = partsDiv[id].dataset.xxx;
-    let y = partsDiv[id].dataset.yyy;
+    const x = partsDiv[id].dataset.xxx;
+    const y = partsDiv[id].dataset.yyy;
     partsDiv[id].style.top = `${y}px`;
     partsDiv[id].style.left = `${x}px`;
 });
+templateDiv.style.opacity = '1';
 
+//клик по кнопке
 document.addEventListener('click', function (event) {
     const target = event.target.closest('.button');
     if(target === null) return;
@@ -34,18 +33,37 @@ document.addEventListener('click', function (event) {
 document.addEventListener('mousedown', function (event) {
     const target = event.target.closest('.map__part');
     if(target === null) return;
-
+    //предотвращение стандартного поведения
+    event.preventDefault();
+    target.ondragstart = function() {
+        return false;
+    };
     console.log('target',target);
-    let shiftX = event.clientX - target.getBoundingClientRect().left;
-    let shiftY = event.clientY - target.getBoundingClientRect().top;
+
+    const targetCoord = target.getBoundingClientRect();
+    let shiftX = event.clientX - targetCoord.left;
+    let shiftY = event.clientY - targetCoord.top;
     target.style.position = 'absolute';
     target.style.zIndex = '100';
 
     moveAt(event.pageX, event.pageY);
 
     function moveAt(pageX, pageY) {
-        target.style.left = pageX - tCoord.left - shiftX + 'px';
-        target.style.top = pageY - shiftY + 'px';
+        let newX = pageX - shiftX;
+        let newY = pageY - shiftY;
+
+        //ограниечение перетаскивания за окно по оси х
+        if (newX<0) newX = 0;
+        if (newX>document.documentElement.clientWidth - target.offsetWidth) {
+            newX = document.documentElement.clientWidth - target.offsetWidth;
+        }
+        if (newY<0) newY = 0;
+        console.log("newY",newY)
+        if (newY>document.documentElement.clientHeight - target.offsetHeight) {
+            newY = document.documentElement.clientHeight - target.offsetHeight;
+        }
+        target.style.left = newX - svgCoord.left + 'px';
+        target.style.top = newY + 'px';
     }
 
     function onMouseMove(event) {
@@ -58,7 +76,7 @@ document.addEventListener('mousedown', function (event) {
     target.onmouseup = function() {
         target.style.zIndex = '1';
         document.removeEventListener('mousemove', onMouseMove);
-        target.onmouseup = null;
+        target.onmousedown = null;
     };
 
 });

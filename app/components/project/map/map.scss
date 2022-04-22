@@ -18,9 +18,6 @@
 
   &__template {
     position: relative;
-    //left: 50%;
-    //transform: translate(-50%,0%);
-    //margin: 0 auto;
     opacity: 0;
     path {
       fill: #3CB371;
@@ -28,6 +25,7 @@
     }
     svg {
       display: block;
+      pointer-events: none;
     }
     .map__complete {
       position: absolute;
