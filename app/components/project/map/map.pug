@@ -1,0 +1,12 @@
+mixin map(content,params)
+    .map&attributes()
+        .map__template
+            include map-template.svg
+            .map__complete
+                +pug-list(content.parts, "map__part")
+            +button({tag:"button", text: "start"}).map__button
+
+
+mixin map__part(content,params)
+    .map__part(data-xxx=content.coord.x data-yyy=content.coord.y)&attributes()
+        +picture(content.image)

@@ -1,0 +1,74 @@
+.map {
+  @mixin mod($mod) {
+    @include modifier("map", $mod) {
+      @content;
+    }
+  }
+
+  @mixin temp($mod) {
+    @include modifier("map__template", $mod) {
+      @content;
+    }
+  }
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+
+  &__template {
+    position: relative;
+    //left: 50%;
+    //transform: translate(-50%,0%);
+    //margin: 0 auto;
+    opacity: 0;
+    path {
+      fill: #3CB371;
+      transition: fill 0s 1.5s;
+    }
+    svg {
+      display: block;
+    }
+    .map__complete {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    &_crashed {
+      animation: map-chashing 1.3s ease-in-out both;
+      path {
+        fill: rgba($BLACK, .1);
+      }
+    }
+  }
+
+  &__parts {
+    //position: absolute;
+    width: 100%;
+    height: 100%;
+    bottom: 0;
+  }
+
+  &__part {
+    position: absolute;
+    //right: 0;
+    //display: inline-block;
+    transition: transform .3s ease-in-out;
+    cursor: pointer;
+    img {
+      //width: 100%;
+      //height: 100%;
+    }
+  }
+
+  &__button {
+    position: absolute;
+    left: 50%;
+    top: 55%;
+    transform: translate(-50%,0%);
+    @include temp("crashed") {
+      display: none;
+    }
+  }
+
+}
