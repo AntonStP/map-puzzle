@@ -17,8 +17,9 @@ const parts = document.querySelectorAll('img');
 Array.from(parts).forEach((el,id)=> {
     const x = partsDiv[id].dataset.xxx;
     const y = partsDiv[id].dataset.yyy;
-    partsDiv[id].style.top = `${y}px`;
-    partsDiv[id].style.left = `${x}px`;
+    partsDiv[id].style.top = `${+y - el.offsetHeight/2}px`;
+    partsDiv[id].style.left = `${+x - el.offsetWidth/2}px`;
+
 });
 templateDiv.style.opacity = '1';
 

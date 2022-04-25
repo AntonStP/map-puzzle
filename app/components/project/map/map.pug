@@ -8,5 +8,5 @@ mixin map(content,params)
 
 
 mixin map__part(content,params)
-    .map__part(data-xxx=content.coord.x data-yyy=content.coord.y)&attributes()
+    .map__part(class=content.image.img.src.slice(13,-4))(data-xxx=content.coord.x data-yyy=content.coord.y)&attributes()
         +picture(content.image)
