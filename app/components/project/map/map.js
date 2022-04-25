@@ -54,16 +54,20 @@ document.addEventListener('mousedown', function (event) {
 
         //ограниечение перетаскивания за окно по оси х
         if (newX<0) newX = 0;
-        if (newX>document.documentElement.clientWidth - target.offsetWidth) {
+        else if (newX>document.documentElement.clientWidth - target.offsetWidth) {
             newX = document.documentElement.clientWidth - target.offsetWidth;
         }
         if (newY<0) newY = 0;
-        console.log("newY",newY)
-        if (newY>document.documentElement.clientHeight - target.offsetHeight) {
+        else if (newY>document.documentElement.clientHeight - target.offsetHeight) {
             newY = document.documentElement.clientHeight - target.offsetHeight;
         }
         target.style.left = newX - svgCoord.left + 'px';
         target.style.top = newY + 'px';
+
+        if (pageX < 0 || pageY < 0 || pageX > document.documentElement.clientWidth || pageY > document.documentElement.clientHeight) {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.onmousedown = null;
+        }
     }
 
     function onMouseMove(event) {
